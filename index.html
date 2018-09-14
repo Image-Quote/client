@@ -15,15 +15,19 @@
     <script src="./lib/navbar.js"></script>
     <script src="./lib/upload.js"></script>
     <script src="./lib/card.js"></script>
+    <script src="./lib/alert.js"></script>
     <link rel="stylesheet" href="./css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
 <body>
     <div id="app">
-        <navbar-cp @sendtoken="getToken" v-bind:cektoken="token" @sendtokenlogout="getTokenLogout"></navbar-cp>
+        <navbar-cp @sendtoken="getToken" v-bind:cektoken="token" @sendtokenlogout="getTokenLogout" @geterr="showerr"></navbar-cp>
+        <alert-cp :msgerr="msgerr"></alert-cp>
         <div class="container">
-            <upload-cp v-if="cekToken || token"></upload-cp>
-            <card-cp></card-cp>
+            <upload-cp v-if="cekToken || token" @getagain="getnewimage"></upload-cp>
+            <card-cp v-bind:mountedtoken="token" v-bind:watchtoken="cekToken" v-bind:watchimage="getimageprops"></card-cp>
         </div>
     </div>
 
@@ -39,7 +43,9 @@
             data: {
                 cekToken: '',
                 token: false,
-                isToken: ''
+                isToken: '',
+                msgerr: '',
+                getimageprops: ''
             },
             methods: {
                 getToken(value){
@@ -48,6 +54,13 @@
 
                 getTokenLogout(value){
                     this.token = false
+                },
+                showerr(value){
+                    this.msgerr = value
+                },
+
+                getnewimage(value){
+                    this.getimageprops = value
                 }
             },
             mounted() {
